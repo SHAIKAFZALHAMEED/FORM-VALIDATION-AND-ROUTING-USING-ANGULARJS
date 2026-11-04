@@ -1,0 +1,304 @@
+
+<!DOCTYPE html>
+<html ng-app="ArtStoreApp">
+
+<head>
+    <title>Online Art Supplies Store</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f1eb;
+            margin: 0;
+        }
+
+        header {
+            background: #593d2b;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        nav {
+            background: #8b5e3c;
+            padding: 15px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 15px;
+            font-weight: bold;
+        }
+
+        .container {
+            background: white;
+            max-width: 650px;
+            margin: 25px auto;
+            padding: 25px;
+            border-radius: 10px;
+        }
+
+        input, select {
+            padding: 9px;
+            width: 95%;
+            margin: 7px 0;
+        }
+
+        button {
+            background: #8b5e3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:disabled {
+            background: gray;
+            cursor: not-allowed;
+        }
+
+        .error {
+            color: red;
+            font-size: 13px;
+        }
+
+        .product {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+</head>
+
+<body ng-controller="MainController">
+
+    <header>
+        <h1>Online Art Supplies Store</h1>
+        <p>Your Creative World Starts Here!</p>
+    </header>
+
+    <nav>
+        <a href="#!/">Home</a>
+        <a href="#!/products">Products</a>
+        <a href="#!/register">Register</a>
+        <a href="#!/contact">Contact</a>
+    </nav>
+
+    <div ng-view></div>
+
+    <!-- Home Page -->
+    <script type="text/ng-template" id="home.html">
+        <div class="container">
+            <h2>Welcome to Art Supplies Store</h2>
+            <p>Find everything you need to express your creativity.</p>
+            <p>Explore colors, brushes, pencils and sketch books.</p>
+            <a href="#!/products">Explore Products</a>
+        </div>
+    </script>
+
+    <!-- Products Page -->
+    <script type="text/ng-template" id="products.html">
+        <div class="container">
+            <h2>Our Art Supplies</h2>
+
+            <div class="product" ng-repeat="p in products">
+                <b>{{p.name}}</b>
+                <p>Price: ₹{{p.price}}</p>
+            </div>
+        </div>
+    </script>
+
+    <!-- Registration Page -->
+    <script type="text/ng-template" id="register.html">
+        <div class="container">
+            <h2>User Registration Form</h2>
+
+            <form name="regForm" ng-submit="register()" novalidate>
+
+                <label>Name*</label>
+                <input type="text" name="name"
+                       ng-model="user.name"
+                       ng-pattern="/^[A-Za-z ]+$/"
+                       required>
+
+                <span class="error"
+                      ng-show="regForm.name.$touched && regForm.name.$invalid">
+                    Enter a valid name without numbers.
+                </span>
+
+                <br>
+
+                <label>Password*</label>
+                <input type="password" name="password"
+                       ng-model="user.password"
+                       ng-pattern="/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/"
+                       required>
+
+                <span class="error"
+                      ng-show="regForm.password.$touched && regForm.password.$invalid">
+                    Password must contain 8 characters, uppercase,
+                    lowercase and a number.
+                </span>
+
+                <br>
+
+                <label>Age*</label>
+                <input type="number" name="age"
+                       ng-model="user.age"
+                       min="18" max="30" required>
+
+                <span class="error"
+                      ng-show="regForm.age.$touched && regForm.age.$invalid">
+                    Age must be between 18 and 30.
+                </span>
+
+                <br>
+
+                <label>Mobile Number*</label>
+                <input type="text" name="mobile"
+                       ng-model="user.mobile"
+                       ng-pattern="/^[0-9]{10}$/"
+                       required>
+
+                <span class="error"
+                      ng-show="regForm.mobile.$touched && regForm.mobile.$invalid">
+                    Enter a valid 10-digit mobile number.
+                </span>
+
+                <br>
+
+                <label>Email*</label>
+                <input type="email" name="email"
+                       ng-model="user.email" required>
+
+                <span class="error"
+                      ng-show="regForm.email.$touched && regForm.email.$invalid">
+                    Enter a valid email address.
+                </span>
+
+                <br>
+
+                <label>Gender*</label><br>
+
+                <label>
+                    <input type="radio" name="gender"
+                           ng-model="user.gender"
+                           value="Male" required
+                           style="width:auto">
+                    Male
+                </label>
+
+                <label>
+                    <input type="radio" name="gender"
+                           ng-model="user.gender"
+                           value="Female" required
+                           style="width:auto">
+                    Female
+                </label>
+
+                <span class="error"
+                      ng-show="regForm.gender.$touched && regForm.gender.$invalid">
+                    Select your gender.
+                </span>
+
+                <br><br>
+
+                <label>State*</label>
+                <select name="state" ng-model="user.state" required>
+                    <option value="">Select State</option>
+                    <option value="Tamil Nadu">Tamil Nadu</option>
+                    <option value="Kerala">Kerala</option>
+                    <option value="Karnataka">Karnataka</option>
+                    <option value="Andhra Pradesh">Andhra Pradesh</option>
+                </select>
+
+                <span class="error"
+                      ng-show="regForm.state.$touched && regForm.state.$invalid">
+                    Please select your state.
+                </span>
+
+                <br><br>
+
+                <button type="submit" ng-disabled="regForm.$invalid">
+                    Submit
+                </button>
+
+            </form>
+
+            <h3 style="color:green" ng-show="success">
+                Registration Successful!
+            </h3>
+        </div>
+    </script>
+
+    <!-- Contact Page -->
+    <script type="text/ng-template" id="contact.html">
+        <div class="container">
+            <h2>Contact Us</h2>
+            <p>Online Art Supplies Store</p>
+            <p>Email: artsupplies@gmail.com</p>
+            <p>Phone: 9876543210</p>
+            <p>Thank you for visiting our store!</p>
+        </div>
+    </script>
+
+    <script>
+        var app = angular.module("ArtStoreApp", ["ngRoute"]);
+
+        app.config(function($routeProvider) {
+
+            $routeProvider
+            .when("/", {
+                templateUrl: "home.html"
+            })
+            .when("/products", {
+                templateUrl: "products.html",
+                controller: "ProductController"
+            })
+            .when("/register", {
+                templateUrl: "register.html",
+                controller: "RegisterController"
+            })
+            .when("/contact", {
+                templateUrl: "contact.html"
+            })
+            .otherwise({
+                redirectTo: "/"
+            });
+
+        });
+
+        app.controller("MainController", function($scope) {
+        });
+
+        app.controller("ProductController", function($scope) {
+
+            $scope.products = [
+                {name: "Watercolor Set", price: 250},
+                {name: "Drawing Pencils", price: 100},
+                {name: "Paint Brushes", price: 150},
+                {name: "Sketch Book", price: 180},
+                {name: "Crayon Set", price: 120}
+            ];
+
+        });
+
+        app.controller("RegisterController", function($scope) {
+
+            $scope.user = {};
+            $scope.success = false;
+
+            $scope.register = function() {
+                $scope.success = true;
+            };
+
+        });
+    </script>
+
+</body>
+</html>
